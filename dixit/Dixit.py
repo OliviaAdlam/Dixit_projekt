@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random 
 
 pygame.init()
   
@@ -14,7 +15,9 @@ green=(155,205,155)
 width = screen.get_width()
 height = screen.get_height()
 font=pygame.font.SysFont("Arial",50)
+title_font=pygame.font.SysFont("Arial",100)
 graj=font.render("Graj",True,black)
+title=title_font.render("Dixit",True,black)
 zasady=font.render("Zasady",True,black)
 wyjdz=font.render("Wyjdź",True,black)
 wroc=font.render("Wróć",True,black)
@@ -27,6 +30,7 @@ wybgr3=font.render("6",True,black)
 wybpun1=font.render("10",True,black)
 wybpun2=font.render("20",True,black)
 wybpun3=font.render("30",True,black)
+ekranik=title_font.render("Gracz nr 2",True,black)
 button1_img=pygame.image.load('blok1.jpg')
 button2_img=pygame.image.load('blok2.jpg')
 button3_img=pygame.image.load('blok3.jpg')
@@ -42,6 +46,7 @@ card4=3
 card5=4
 zagrana=0
 plik=open('plik.txt','r')
+ekran=False
 for line in plik:
     count+=1
     karty.append(line.strip())
@@ -79,6 +84,7 @@ while True:
             Button2.draw()
             Button3.draw()
             screen.blit(graj,(460,210))
+            screen.blit(title,(410,25))
             screen.blit(zasady,(440,410))
             screen.blit(wyjdz,(440,610))
             
@@ -179,81 +185,85 @@ while True:
             if(il_graczy!=0 and il_pkt!=0):
                 opcje=3
         elif(opcje==3):
-            screen.fill(color)
-            position=pygame.mouse.get_pos()
-            karta1=Button(50,300,pygame.image.load(karty[card1]))
-            karta2=Button(250,300,pygame.image.load(karty[card2]))
-            karta3=Button(450,300,pygame.image.load(karty[card3]))
-            karta4=Button(650,300,pygame.image.load(karty[card4]))
-            karta5=Button(850,300,pygame.image.load(karty[card5]))
-            wybierz=Button(375,650,button1_img)
-            karta1.draw()
-            karta2.draw()
-            karta3.draw()
-            karta4.draw()
-            karta5.draw()
-            wybierz.draw()
-            screen.blit(choose,(425,650))
-            if karta1.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and karta1.clicked==False:
-                    karta1.clicked=True
-                    zagrana=1
-                if pygame.mouse.get_pressed()[0]==0:
-                    karta1.clicked=False
-            if karta2.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and karta2.clicked==False:
-                    karta2.clicked=True
-                    zagrana=2
-                if pygame.mouse.get_pressed()[0]==0:
-                    karta2.clicked=False
-            if karta3.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and karta3.clicked==False:
-                    karta3.clicked=True
-                    zagrana=3
-                if pygame.mouse.get_pressed()[0]==0:
-                    karta3.clicked=False
-            if karta4.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and karta4.clicked==False:
-                    karta4.clicked=True
-                    zagrana=4
-                if pygame.mouse.get_pressed()[0]==0:
-                    karta4.clicked=False
-            if karta5.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and karta5.clicked==False:
-                    karta5.clicked=True
-                    zagrana=5
-                if pygame.mouse.get_pressed()[0]==0:
-                    karta5.clicked=False
-            if wybierz.rect.collidepoint(position):
-                if pygame.mouse.get_pressed()[0]==1 and wybierz.clicked==False and zagrana!=0:
-                    wybierz.clicked=True
-                    if zagrana==1:
-                        card1+=1
-                        if card1>12:
-                            card1=0
-                        zagrana=0
-                    if zagrana==2:
-                        card2+=1
-                        if card2>12:
-                            card2=0
-                        zagrana=0
-                    if zagrana==3:
-                        card3+=1
-                        if card3>12:
-                            card3=0
-                        zagrana=0
-                    if zagrana==4:
-                        card4+=1
-                        if card4>12:
-                            card4=0
-                        zagrana=0
-                    if zagrana==5:
-                        card5+=1
-                        if card5>12:
-                            card5=0
-                        zagrana=0
-                if pygame.mouse.get_pressed()[0]==0:
-                    wybierz.clicked=False
+            if(ekran==False):
+                screen.fill(color)
+                position=pygame.mouse.get_pos()
+                karta1=Button(50,300,pygame.image.load(karty[card1]))
+                karta2=Button(250,300,pygame.image.load(karty[card2]))
+                karta3=Button(450,300,pygame.image.load(karty[card3]))
+                karta4=Button(650,300,pygame.image.load(karty[card4]))
+                karta5=Button(850,300,pygame.image.load(karty[card5]))
+                wybierz=Button(375,650,button1_img)
+                karta1.draw()
+                karta2.draw()
+                karta3.draw()
+                karta4.draw()
+                karta5.draw()
+                wybierz.draw()
+                screen.blit(choose,(425,650))
+                if karta1.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and karta1.clicked==False:
+                        karta1.clicked=True
+                        zagrana=1
+                    if pygame.mouse.get_pressed()[0]==0:
+                        karta1.clicked=False
+                if karta2.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and karta2.clicked==False:
+                        karta2.clicked=True
+                        zagrana=2
+                    if pygame.mouse.get_pressed()[0]==0:
+                        karta2.clicked=False
+                if karta3.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and karta3.clicked==False:
+                        karta3.clicked=True
+                        zagrana=3
+                    if pygame.mouse.get_pressed()[0]==0:
+                        karta3.clicked=False
+                if karta4.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and karta4.clicked==False:
+                        karta4.clicked=True
+                        zagrana=4
+                    if pygame.mouse.get_pressed()[0]==0:
+                        karta4.clicked=False
+                if karta5.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and karta5.clicked==False:
+                        karta5.clicked=True
+                        zagrana=5
+                    if pygame.mouse.get_pressed()[0]==0:
+                        karta5.clicked=False
+                if wybierz.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and wybierz.clicked==False and zagrana!=0:
+                        wybierz.clicked=True
+                        ekran=True
+                        if zagrana==1:
+                            card1=random.randint(1,12)
+                            zagrana=0
+                        if zagrana==2:
+                            card2=random.randint(1,12)
+                            zagrana=0
+                        if zagrana==3:
+                            card3=random.randint(1,12)
+                            zagrana=0
+                        if zagrana==4:
+                            card4=random.randint(1,12)
+                            zagrana=0
+                        if zagrana==5:
+                            card5=random.randint(1,12)
+                            zagrana=0
+                    if pygame.mouse.get_pressed()[0]==0:
+                        wybierz.clicked=False
+            elif(ekran==True):
+                screen.fill(color)
+                position=pygame.mouse.get_pos()
+                Button2.draw()
+                screen.blit(graj,(460,410))
+                screen.blit(ekranik,(300,200))
+                if Button2.rect.collidepoint(position):
+                    if pygame.mouse.get_pressed()[0]==1 and Button2.clicked==False:
+                        Button2.clicked=True
+                        ekran=False
+                    if pygame.mouse.get_pressed()[0]==0:
+                        Button2.clicked=False
             
             
             

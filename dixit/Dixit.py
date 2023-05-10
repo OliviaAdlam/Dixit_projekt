@@ -3,7 +3,7 @@ import sys
 import random 
 
 pygame.init()
-  
+clock = pygame.time.Clock() 
 res = (1000,750)
 screen = pygame.display.set_mode(res)
 color = (112,128,144)
@@ -34,6 +34,7 @@ ekranik=title_font.render("Gracz nr 2",True,black)
 button1_img=pygame.image.load('blok1.jpg')
 button2_img=pygame.image.load('blok2.jpg')
 button3_img=pygame.image.load('blok3.jpg')
+input_rect = pygame.Rect(100, 150, 300, 75)
 opcje=0
 il_graczy=0
 il_pkt=0
@@ -45,14 +46,16 @@ card3=2
 card4=3
 card5=4
 zagrana=0
+user_text = ''
 plik=open('plik.txt','r')
 ekran=False
+gracz=1
 for line in plik:
     count+=1
     karty.append(line.strip())
 plik.close()
 
-
+active = False
 start=False
 class Button():
     def __init__(self,x,y,image):
@@ -71,6 +74,24 @@ while True:
           
         if ev.type == pygame.QUIT:
             pygame.quit()
+
+        if ev.type == pygame.MOUSEBUTTONDOWN:
+            if input_rect.collidepoint(ev.pos):
+                active = True
+            else:
+                active = False
+  
+        if ev.type == pygame.KEYDOWN:
+  
+         
+            if ev.key == pygame.K_BACKSPACE:
+  
+                
+                user_text = user_text[:-1]
+  
+           
+            else:
+                user_text += ev.unicode
               
     if(start==False):              
         if(opcje==0):
@@ -187,13 +208,23 @@ while True:
         elif(opcje==3):
             if(ekran==False):
                 screen.fill(color)
+                if gracz==1:
+                    skojarzenie=font.render('Wpisz skojarzenie:', True, black)
+                if gracz!=1:
+                    skojarzenie=font.render('Podane skojarzenie to:', True, black)
+                    
                 position=pygame.mouse.get_pos()
+                pygame.draw.rect(screen, green, input_rect)
+                text_surface = font.render(user_text, True, (255, 255, 255))
+                screen.blit(text_surface, (input_rect.x+5, input_rect.y+5))
+                input_rect.w = max(100, text_surface.get_width()+10)
                 karta1=Button(50,300,pygame.image.load(karty[card1]))
                 karta2=Button(250,300,pygame.image.load(karty[card2]))
                 karta3=Button(450,300,pygame.image.load(karty[card3]))
                 karta4=Button(650,300,pygame.image.load(karty[card4]))
                 karta5=Button(850,300,pygame.image.load(karty[card5]))
                 wybierz=Button(375,650,button1_img)
+                screen.blit(skojarzenie, (100,50))
                 karta1.draw()
                 karta2.draw()
                 karta3.draw()
@@ -235,6 +266,7 @@ while True:
                     if pygame.mouse.get_pressed()[0]==1 and wybierz.clicked==False and zagrana!=0:
                         wybierz.clicked=True
                         ekran=True
+                        gracz+=1
                         if zagrana==1:
                             card1=random.randint(1,12)
                             zagrana=0
@@ -268,3 +300,4 @@ while True:
             
             
         pygame.display.update()
+        clock.tick(60)
